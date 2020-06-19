@@ -220,8 +220,10 @@
                     color.addEventListener('mouseenter', () => name.innerText = 'Copier')
                     color.addEventListener('mouseleave', () => name.innerText = shade)
 
+                    const variable_name = palette.variable.replace('*', shade)
+
                     color.addEventListener('click', () => {
-                        navigator.clipboard.writeText(color_value)
+                        navigator.clipboard.writeText(variable_name)
                         name.innerText = 'Copié !'
                     })
 
