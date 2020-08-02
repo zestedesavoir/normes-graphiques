@@ -1,4 +1,6 @@
 module.exports = {
+  publicPath: '/palette-zds/',
+
   pluginOptions: {
     i18n: {
       locale: 'en',
@@ -9,7 +11,7 @@ module.exports = {
   },
 
   pwa: {
-    name: 'Banana for Scale',
+    name: 'Zeste de Savoir – Compagnon d\'interface',
     themeColor: '#fcdc00',
     msTileColor: '#fcdc00',
     manifestOptions: {
