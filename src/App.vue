@@ -49,12 +49,48 @@ export default {
       currentTab: 0
     }
   },
+  methods: {
+    updateHash () {
+      if (this.currentTab === 0) {
+        document.location.hash = ''
+
+        // Removes the # at the end of the URL
+        history.replaceState('', document.title, window.location.pathname + window.location.search)
+        return
+      }
+
+      setTimeout(() => {
+        const tabEl = document.querySelector(`.b-tabs nav.tabs li:nth-child(${this.currentTab + 1}) a`)
+        document.location.hash = tabEl.innerText.toLowerCase()
+      }, 100)
+    }
+  },
   mounted () {
-    this.currentTab = parseInt(localStorage.getItem('current-tab') || 0)
+    if (document.location.hash !== '') {
+      setTimeout(() => {
+        let i = 0
+        let found = false
+
+        document.querySelectorAll('.b-tabs nav.tabs li').forEach(e => {
+          if (found) return
+
+          if (e.querySelector('a').innerText.toLowerCase() === document.location.hash.toLowerCase().substring(1)) {
+            found = true
+            this.currentTab = i
+          }
+
+          i++
+        })
+      }, 100)
+    } else {
+      this.currentTab = parseInt(localStorage.getItem('current-tab') || 0)
+      this.updateHash(true)
+    }
   },
   watch: {
     currentTab () {
       localStorage.setItem('current-tab', this.currentTab)
+      this.updateHash(false)
     }
   },
   components: {
