@@ -201,6 +201,17 @@ export default {
         $green-800: hsl(81, 78%, 21%);
         $green-900: hsl(81, 86%, 14%);
         `,
+        'Teintes de bleu': `
+        $blue-100: hsl(216, 100%, 93%);
+        $blue-200: hsl(216, 100%, 85%);
+        $blue-300: hsl(219, 95%, 76%);
+        $blue-400: hsl(224, 69%, 54%);
+        $blue-500: hsl(223, 71%, 47%);
+        $blue-600: hsl(228, 74%, 43%);
+        $blue-700: hsl(230, 80%, 38%);
+        $blue-800: hsl(232, 86%, 32%);
+        $blue-900: hsl(234, 90%, 25%);
+        `,
         'Teintes de gris': `
         $grey-100: hsl(180, 8%, 95%);
         $grey-200: hsl(180, 4%, 84%);
