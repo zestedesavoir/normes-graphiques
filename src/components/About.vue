@@ -1,7 +1,10 @@
 <template>
   <section class="about">
     <header>
-      <img src="img/logo.svg" alt="Zeste de Savoir" />
+      <img
+        src="img/logo.svg"
+        alt="Zeste de Savoir"
+      >
       <h2>Compagnon d'interface</h2>
     </header>
 
@@ -15,10 +18,19 @@
         SCSS directement prêtes à l'emploi) en cliquant sur les couleurs ou sur cette icône.
       </p>
       <p>
-        <copy copy="https://www.youtube.com/watch?v=dQw4w9WgXcQ" button-before>Cliquez-moi !</copy>
+        <copy
+          copy="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          button-before
+        >
+          Cliquez-moi !
+        </copy>
       </p>
       <p>
-        <b-button type="is-primary" tag="a" href="https://docs.zestedesavoir.com/front-end.html">
+        <b-button
+          type="is-primary"
+          tag="a"
+          href="https://docs.zestedesavoir.com/front-end.html"
+        >
           Retour à la documentation de Zeste de Savoir
         </b-button>
       </p>

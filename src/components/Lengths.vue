@@ -1,8 +1,15 @@
 <template>
   <section class="lengths">
     <ul>
-      <li v-for="(length, i) in lengths" :key="i">
-        <copy :copy="length.variable" button-before label="Copier la variable">
+      <li
+        v-for="(length, i) in lengths"
+        :key="i"
+      >
+        <copy
+          :copy="length.variable"
+          button-before
+          label="Copier la variable"
+        >
           <code>{{ length.variable }}</code>
         </copy>
 
@@ -10,7 +17,10 @@
           {{ length.css.replace('rem', ' rem') }}
         </p>
 
-        <div class="length-preview" :style="{ width: length.css }" />
+        <div
+          class="length-preview"
+          :style="{ width: length.css }"
+        />
       </li>
     </ul>
   </section>

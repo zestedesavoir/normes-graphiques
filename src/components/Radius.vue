@@ -1,9 +1,14 @@
 <template>
   <section class="radius">
-    <div v-for="(rad, i) in radius" :key="i" :class="{ 'is-round': rad.is_round }">
+    <div
+      v-for="(rad, i) in radius"
+      :key="i"
+      :class="{ 'is-round': rad.is_round }"
+    >
       <article
         class="radius-preview style-item"
-        :style="{ 'border-radius': rad.css }">
+        :style="{ 'border-radius': rad.css }"
+      >
         <h2>
           <div>
             Courbure {{ rad.is_round ? 'circulaire' : rad.id }}

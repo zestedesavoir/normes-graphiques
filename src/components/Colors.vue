@@ -7,10 +7,11 @@
     >
       <h1>
         {{ palette.name }}
-        <code>{{ palette.variable }}</code>
+        <code v-if="palette.variable">{{ palette.variable }}</code>
       </h1>
-      <ul>
+      <ul :class="{ 'has-variables': palette.variable === false }">
         <li
+          class="color-preview"
           v-for="([shade, color_value], j) in Object.entries(palette.palette)"
           :key="j"
         >
@@ -18,13 +19,13 @@
             class="color"
             :style="{ 'background-color': color_value.hsl }"
             :title="color_value.rgb + ' ⋅ ' + color_value.hsl"
-            @click="copy(palette.variable, shade, color_value)"
+            @click="copy(palette.variable || color_value.variable, shade, color_value)"
             @mouseenter="on_hover(palette.variable, shade)"
             @mouseleave="on_hover_exit(palette.variable, shade)"
           />
           <span
             class="name"
-            v-if="is_copied(palette.variable, shade)"
+            v-if="is_copied(palette.variable || color_value.variable, shade)"
           >Copié !</span>
           <span
             class="name"
@@ -33,7 +34,10 @@
           <span
             class="name"
             v-else
-          >{{ shade }}</span>
+          >
+            <template v-if="palette.variable !== false">{{ shade }}</template>
+            <code v-else>{{ color_value.variable }}</code>
+          </span>
         </li>
       </ul>
     </article>
@@ -62,7 +66,8 @@
             aria-role="listitem"
           >
             <span>
-              HSL <code>hsl(199, 85%, 21%)</code>
+              HSL
+              <code>hsl(199, 85%, 21%)</code>
             </span>
           </b-dropdown-item>
 
@@ -71,72 +76,64 @@
             aria-role="listitem"
           >
             <span>
-              RGB <code>#F8AB30</code>
+              RGB
+              <code>#F8AB30</code>
             </span>
           </b-dropdown-item>
         </b-dropdown>
       </p>
     </footer>
+
+    <aside class="box closest-color-tool">
+      <h1>Trouver la couleur la plus proche dans la palette</h1>
+      <div class="color-input">
+        <b-input
+          type="text"
+          size="is-medium"
+          v-model="input_color_to_convert"
+          placeholder="Votre couleur (RGB, RGBA, HSL, HLSA, HEX, HEXA, nom)…"
+        />
+      </div>
+      <div class="color-output">
+        <div class="original color-preview">
+          <span
+            class="color"
+            :style="{ 'background-color': convert_original_hovered && converted_color ? converted_color.css : input_color_to_convert }"
+            @mouseenter="convert_original_hovered = true"
+            @mouseleave="convert_original_hovered = false"
+          />
+          <span class="name">
+            <template v-if="convert_original_hovered && converted_color">Palette</template>
+            <template v-else>Originale</template><br />
+            <em v-if="converted_color">Survolez pour comparer</em>
+          </span>
+        </div>
+        <div class="arrow">→</div>
+        <div class="arrow-mobile">↓</div>
+        <div class="output color-preview">
+          <span
+            class="color"
+            :style="{ 'background-color': converted_color ? converted_color.css : 'white' }"
+            @click="copy_converted"
+          />
+          <span class="name">
+            <template v-if="converted_color">
+              <code v-if="!copy_color">{{ converted_color.scss }}</code>
+              <code v-else-if="copy_format === 'hsl'">{{ converted_color.css }}</code>
+              <code v-else>{{ converted_color.rgb }}</code>
+            </template>
+            <template v-else>Convertie</template><br />
+            <em v-if="converted_color && !convert_output_copied">Cliquez pour copier</em>
+            <em v-else-if="converted_color && convert_output_copied">Copié !</em>
+          </span>
+        </div>
+      </div>
+    </aside>
   </section>
 </template>
 
 <script>
-function hue2rgb (p, q, t) {
-  if (t < 0) t += 1
-  if (t > 1) t -= 1
-  if (t < 1.0 / 6.0) return p + (q - p) * 6 * t
-  if (t < 1.0 / 2.0) return q
-  if (t < 2.0 / 3.0) return p + (q - p) * (2 / 3 - t) * 6
-  return p
-}
-
-/**
- * Converts an HSL color value to RGB. Conversion formula
- * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
- * Assumes h, s, and l are contained in the set [0, 1] and
- * returns r, g, and b in the set [0, 255].
- *
- * @param   {number}  h       The hue
- * @param   {number}  s       The saturation
- * @param   {number}  l       The lightness
- * @return  {Array}           The RGB representation
- */
-function hslToRgb (h, s, l) {
-  let r, g, b
-
-  if (s === 0) {
-    r = g = b = l // achromatic
-  } else {
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s
-    const p = 2 * l - q
-    r = hue2rgb(p, q, h + 1.0 / 3.0)
-    g = hue2rgb(p, q, h)
-    b = hue2rgb(p, q, h - 1.0 / 3.0)
-  }
-
-  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)]
-}
-
-/**
- * Converts a CSS value (that may be a number or a percent value) to a real value
- * (percent values are converted to [0;1]).
- */
-function cssPercentValue (val) {
-  if (val.indexOf('%') !== -1) {
-    return parseFloat(val) / 100
-  } else {
-    return parseFloat(val)
-  }
-}
-
-/**
- * Converts a HSL CSS entry (format “hsl(198, 22%, 18%)”) to RGB (format “#AABBCC”).
- */
-function cssHSL2RGB (hsl) {
-  hsl = hsl.toLowerCase().replace('hsl(', '').replace(')', '').split(',')
-  const rgb = hslToRgb(parseFloat(hsl[0]) / 360.0, cssPercentValue(hsl[1]), cssPercentValue(hsl[2]))
-  return `#${rgb[0].toString(16).padStart(2, '0')}${rgb[1].toString(16).padStart(2, '0')}${rgb[2].toString(16).padStart(2, '0')}`.toUpperCase()
-}
+import { css_hsl_to_rgb, css_any_to_hsl_components, find_nearest_color } from '../colors'
 
 export default {
   data () {
@@ -157,7 +154,7 @@ export default {
         $primary-800: hsl(199, 92%, 15%);
         $primary-900: hsl(199, 97%, 13%);
         `,
-        'Teintes d\'accentuation': `
+        "Teintes d'accentuation": `
         $accent-100: hsl(51, 50%, 95%);
         $accent-200: hsl(40, 78%, 87%);
         $accent-300: hsl(38, 86%, 80%);
@@ -222,8 +219,19 @@ export default {
         $grey-700: hsl(197, 5%, 30%);
         $grey-800: hsl(203, 8%, 19%);
         $grey-900: hsl(200, 22%, 8%);
+        `,
+        'Noirs et blancs': `
+        $true-white: hsl(0, 0%, 100%);
+        $white: hsl(0, 0%, 98%);
+        $black: hsl(0, 0%, 6%);
+        $true-black: hsl(0, 0%, 0%);
         `
-      }
+      },
+
+      input_color_to_convert: '',
+      convert_original_hovered: false,
+      convert_output_hovered: false,
+      convert_output_copied: false
     }
   },
 
@@ -233,24 +241,45 @@ export default {
         const scss = this.raw_palette[name]
         let variable = null
 
-        const palette = Object.fromEntries(scss.split('\n').map(line => {
-          line = line.trim()
-          if (!line) return null
+        const palette = Object.fromEntries(
+          scss
+            .split('\n')
+            .map(line => {
+              line = line.trim()
+              if (!line) return null
 
-          const parts = line.split(':', 2)
+              const parts = line.split(':', 2)
+              const this_variable = `${parts[0].split('-')[0]}-*`
 
-          if (!variable) {
-            variable = `${parts[0].split('-')[0]}-*`
-          }
+              if (variable === null) {
+                variable = this_variable
+              } else if (variable !== this_variable) { //  If there is not a constant variable prefix
+                variable = false
+              }
 
-          const hsl = parts[1].trim().replace(';', '')
-          const rgb = cssHSL2RGB(hsl)
+              const hsl = parts[1].trim().replace(';', '')
+              const rgb = css_hsl_to_rgb(hsl)
+              const name = variable !== false ? parts[0].split('-', 2)[1] : parts[0]
 
-          return [parts[0].split('-', 2)[1], { hsl, rgb }]
-        }).filter(line => line !== null))
+              return [name, { hsl, rgb, variable: parts[0] }]
+            })
+            .filter(line => line !== null)
+        )
 
         return { name, variable, palette }
       })
+    },
+
+    colors () {
+      return Object.fromEntries(
+        Object.values(this.palettes)
+          .flatMap(palette => Object.keys(palette.palette)
+            .map(color_id => [palette.variable ? palette.variable.replace('*', color_id) : palette.palette[color_id].variable, css_any_to_hsl_components(palette.palette[color_id].hsl)]))
+      )
+    },
+
+    converted_color () {
+      return this.input_color_to_convert ? find_nearest_color(css_any_to_hsl_components(this.input_color_to_convert), this.colors) : null
     }
   },
 
@@ -280,6 +309,20 @@ export default {
 
       this.copied = variable + shade
       setTimeout(() => { this.copied = null }, 2000)
+    },
+    copy_converted () {
+      let copy = ''
+
+      if (this.copy_color) {
+        copy = this.copy_format === 'rgb' ? this.converted_color.rgb : this.converted_color.css
+      } else {
+        copy = this.converted_color.scss
+      }
+
+      navigator.clipboard.writeText(copy)
+
+      this.convert_output_copied = true
+      setTimeout(() => { this.convert_output_copied = false }, 2000)
     }
   }
 }
@@ -287,6 +330,33 @@ export default {
 
 <style lang="sass">
 @import "bulma/sass/utilities/mixins"
+
+.color-preview
+  display: inline-flex
+  flex-direction: column
+  align-items: center
+
+  margin: 0 .4rem 1rem
+
+  text-align: center
+
+  span
+    &.color
+      display: block
+      width: 3.2rem
+      height: 3.2rem
+      border-radius: 4px
+      box-shadow: 0 -2px 0 hsla(0, 0%, 100%, 0.15), inset 0 2px 2px hsla(0, 0%, 0%, 0.1)
+      cursor: pointer
+
+    &.name
+      display: inline-block
+      margin-top: .6rem
+      color: #777
+
+      code
+        margin: 0
+        font-size: 1em
 
 article.palette
   margin: 1rem 0
@@ -319,25 +389,8 @@ article.palette
     list-style-type: none
     margin: 1rem 0 0 0
 
-    li
-      display: inline-flex
-      flex-direction: column
-      align-items: center
-      margin: 0 .4rem 1rem
-
-      span
-        &.color
-          display: block
-          width: 3.2rem
-          height: 3.2rem
-          border-radius: 4px
-          box-shadow: 0 -2px 0 hsla(0, 0%, 100%, 0.15), inset 0 2px 2px hsla(0, 0%, 0%, 0.1)
-          cursor: pointer
-
-        &.name
-          display: inline-block
-          margin-top: .6rem
-          color: #777
+    &.has-variables li
+      width: 8rem
 
 footer.copy-switch
   display: flex
@@ -399,6 +452,54 @@ footer.copy-switch
       display: block
       padding: 0
       color: hsl(198, 29%, 56%)
+
+aside.closest-color-tool
+  margin: 1.5rem
+
+  h1
+    color: hsl(199, 85%, 21%)
+    font-size: .9rem
+    margin-bottom: 1.5rem
+
+  .color-input
+    width: 60%
+    margin: auto
+
+    +mobile
+      width: 100%
+
+  .color-output
+    display: flex
+    flex-direction: row
+    align-items: baseline
+    justify-content: center
+
+    +mobile
+      flex-direction: column
+      align-items: center
+
+    margin-top: 2rem
+
+    .arrow, .arrow-mobile
+      font-size: 2rem
+      text-align: center
+
+      color: hsl(199, 87%, 18%)
+
+      user-select: none
+
+    .arrow-mobile
+      display: none
+      margin: .5rem 0 1.5rem
+
+    +mobile
+      .arrow
+        display: none
+      .arrow-mobile
+        display: block
+
+    .original, .output
+      flex: 1
 
 +mobile
   article.palette

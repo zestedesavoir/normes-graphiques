@@ -14,7 +14,10 @@
             {{ font.main_font }}
             <code>{{ font.variable }}</code>
           </div>
-          <Copy :copy="font.variable" label="Copier la variable" />
+          <Copy
+            :copy="font.variable"
+            label="Copier la variable"
+          />
         </h2>
         <p :style="{ fontFamily: font.fonts }">
           {{ pangramme }}
