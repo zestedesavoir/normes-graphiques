@@ -46,6 +46,7 @@ export default {
       $length-20: 2.0rem;
       $length-24: 2.4rem;
       $length-32: 3.2rem;
+      $length-38: 3.8rem;
       $length-48: 4.8rem;
       $length-64: 6.4rem;
       $length-96: 9.4rem;

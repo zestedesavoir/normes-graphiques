@@ -12,7 +12,7 @@
       <ul :class="{ 'has-variables': palette.variable === false }">
         <li
           class="color-preview"
-          v-for="([shade, color_value], j) in Object.entries(palette.palette)"
+          v-for="([shade, color_value], j) in Object.entries(palette.palette).sort((a, b) => a[0] - b[0])"
           :key="j"
         >
           <span
@@ -144,18 +144,20 @@ export default {
       copied: '',
       raw_palette: {
         'Teintes primaires': `
-        $primary-100: hsl(198, 22%, 91%);
-        $primary-200: hsl(201, 30%, 74%);
-        $primary-300: hsl(198, 29%, 56%);
-        $primary-400: hsl(199, 41%, 39%);
-        $primary-500: hsl(199, 56%, 30%);
+        $primary-000: hsl(198, 40%, 87%);
+        $primary-100: hsl(198, 49%, 69%);
+        $primary-200: hsl(197, 50%, 52%);
+        $primary-300: hsl(198, 100%, 34%);
+        $primary-400: hsl(199, 84%, 32%);
+        $primary-500: hsl(199, 84%, 27%);
         $primary-600: hsl(199, 85%, 21%);
         $primary-700: hsl(199, 87%, 18%);
         $primary-800: hsl(199, 92%, 15%);
         $primary-900: hsl(199, 97%, 13%);
         `,
         "Teintes d'accentuation": `
-        $accent-100: hsl(51, 50%, 95%);
+        $accent-000: hsl(51, 50%, 95%);
+        $accent-100: hsl(42, 73%, 91%);
         $accent-200: hsl(40, 78%, 87%);
         $accent-300: hsl(38, 86%, 80%);
         $accent-400: hsl(38, 90%, 73%);
@@ -166,6 +168,7 @@ export default {
         $accent-900: hsl(15, 86%, 30%);
         `,
         'Teintes de violet': `
+        $purple-000: hsl(262, 92%, 97%);
         $purple-100: hsl(264, 36%, 89%);
         $purple-200: hsl(264, 35%, 82%);
         $purple-300: hsl(265, 35%, 74%);
@@ -177,9 +180,10 @@ export default {
         $purple-900: hsl(264, 82%, 29%);
         `,
         'Teintes de rouge': `
-        $red-100: hsl(360, 100%, 97%);
-        $red-200: hsl(360, 82%, 89%);
-        $red-300: hsl(360, 77%, 78%);
+        $red-000: hsl(360, 100%, 97%);
+        $red-100: hsl(360, 82%, 89%);
+        $red-200: hsl(360, 77%, 78%);
+        $red-300: hsl(360, 71%, 66%);
         $red-400: hsl(360, 64%, 55%);
         $red-500: hsl(360, 67%, 44%);
         $red-600: hsl(360, 72%, 38%);
@@ -188,9 +192,10 @@ export default {
         $red-900: hsl(360, 92%, 20%);
         `,
         'Teintes de vert': `
-        $green-100: hsl(83, 88%, 94%);
-        $green-200: hsl(84, 77%, 86%);
-        $green-300: hsl(83, 68%, 74%);
+        $green-000: hsl(83, 88%, 94%);
+        $green-100: hsl(84, 77%, 86%);
+        $green-200: hsl(83, 68%, 74%);
+        $green-300: hsl(83, 63%, 61%);
         $green-400: hsl(83, 55%, 52%);
         $green-500: hsl(83, 64%, 42%);
         $green-600: hsl(83, 70%, 34%);
@@ -199,9 +204,10 @@ export default {
         $green-900: hsl(81, 86%, 14%);
         `,
         'Teintes de bleu': `
-        $blue-100: hsl(216, 100%, 93%);
-        $blue-200: hsl(216, 100%, 85%);
-        $blue-300: hsl(219, 95%, 76%);
+        $blue-000: hsl(216, 100%, 93%);
+        $blue-100: hsl(216, 100%, 85%);
+        $blue-200: hsl(219, 95%, 76%);
+        $blue-300: hsl(222, 81%, 65%);
         $blue-400: hsl(224, 69%, 54%);
         $blue-500: hsl(223, 71%, 47%);
         $blue-600: hsl(228, 74%, 43%);
@@ -210,15 +216,16 @@ export default {
         $blue-900: hsl(234, 90%, 25%);
         `,
         'Teintes de gris': `
-        $grey-100: hsl(180, 8%, 95%);
-        $grey-200: hsl(180, 4%, 84%);
-        $grey-300: hsl(195, 3%, 73%);
-        $grey-400: hsl(192, 3%, 63%);
-        $grey-500: hsl(192, 2%, 52%);
-        $grey-600: hsl(190, 3%, 41%);
-        $grey-700: hsl(197, 5%, 30%);
-        $grey-800: hsl(203, 8%, 19%);
-        $grey-900: hsl(200, 22%, 8%);
+        $grey-000: hsl(216, 33%, 97%);
+        $grey-100: hsl(214, 15%, 91%);
+        $grey-200: hsl(210, 16%, 82%);
+        $grey-300: hsl(211, 13%, 65%);
+        $grey-400: hsl(211, 10%, 53%);
+        $grey-500: hsl(211, 12%, 43%);
+        $grey-600: hsl(209, 14%, 37%);
+        $grey-700: hsl(209, 18%, 30%);
+        $grey-800: hsl(209, 20%, 25%);
+        $grey-900: hsl(210, 24%, 16%);
         `,
         'Noirs et blancs': `
         $true-white: hsl(0, 0%, 100%);
