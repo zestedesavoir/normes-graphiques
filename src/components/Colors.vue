@@ -91,7 +91,7 @@
           type="text"
           size="is-medium"
           v-model="input_color_to_convert"
-          placeholder="Votre couleur (RGB, RGBA, HSL, HLSA, HEX, HEXA, nom)…"
+          placeholder="RGB(A), HSL(A), HEX(A), ou nom"
         />
       </div>
       <div class="color-output">
@@ -104,12 +104,19 @@
           />
           <span class="name">
             <template v-if="convert_original_hovered && converted_color">Palette</template>
-            <template v-else>Originale</template><br />
-            <em v-if="converted_color">Survolez pour comparer</em>
+            <template v-else>Originale</template><br>
+            <em v-if="converted_color"><span class="desktop-inline">Survolez</span><span
+              class="mobile-inline"
+              aria-hidden="true"
+            >Tapotez</span> pour comparer</em>
           </span>
         </div>
-        <div class="arrow">→</div>
-        <div class="arrow-mobile">↓</div>
+        <div class="arrow">
+          →
+        </div>
+        <div class="arrow-mobile">
+          ↓
+        </div>
         <div class="output color-preview">
           <span
             class="color"
@@ -122,8 +129,13 @@
               <code v-else-if="copy_format === 'hsl'">{{ converted_color.css }}</code>
               <code v-else>{{ converted_color.rgb }}</code>
             </template>
-            <template v-else>Convertie</template><br />
-            <em v-if="converted_color && !convert_output_copied">Cliquez pour copier</em>
+            <template v-else>Convertie</template><br>
+            <em v-if="converted_color && !convert_output_copied">
+              <span class="desktop-inline">Cliquez</span><span
+                class="mobile-inline"
+                aria-hidden="true"
+              >Touchez</span> pour copier
+            </em>
             <em v-else-if="converted_color && convert_output_copied">Copié !</em>
           </span>
         </div>
@@ -396,8 +408,19 @@ article.palette
     list-style-type: none
     margin: 1rem 0 0 0
 
-    &.has-variables li
-      width: 8rem
+    &.has-variables
+      li
+        width: 8rem
+
+        +mobile
+          display: flex
+          flex-direction: row
+          align-items: center
+
+          width: 100%
+
+          .name
+            margin-left: 1.5rem
 
 footer.copy-switch
   display: flex
@@ -464,9 +487,12 @@ aside.closest-color-tool
   margin: 1.5rem
 
   h1
-    color: hsl(199, 85%, 21%)
-    font-size: .9rem
     margin-bottom: 1.5rem
+    font-size: .9rem
+    color: hsl(199, 85%, 21%)
+
+    +mobile
+      text-align: center
 
   .color-input
     width: 60%
@@ -508,6 +534,15 @@ aside.closest-color-tool
     .original, .output
       flex: 1
 
+.mobile, .mobile-inline
+  display: none
+
+.desktop
+  display: block
+
+.desktop-inline
+  display: inline
+
 +mobile
   article.palette
     flex-direction: column
@@ -517,4 +552,13 @@ aside.closest-color-tool
 
     ul
       padding: 0
+
+  .desktop, .desktop-inline
+    display: none
+
+  .mobile
+    display: block
+
+  .mobile-inline
+    display: inline
 </style>
