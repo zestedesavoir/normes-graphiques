@@ -169,12 +169,12 @@ export default {
         `,
         "Teintes d'accentuation": `
         $accent-000: hsl(51, 50%, 95%);
-        $accent-100: hsl(42, 73%, 91%);
-        $accent-200: hsl(40, 78%, 87%);
-        $accent-300: hsl(38, 86%, 80%);
-        $accent-400: hsl(38, 90%, 73%);
-        $accent-500: hsl(37, 92%, 65%);
-        $accent-600: hsl(37, 93%, 58%);
+        $accent-100: hsl(40, 78%, 87%);
+        $accent-200: hsl(38, 86%, 80%);
+        $accent-300: hsl(38, 90%, 73%);
+        $accent-400: hsl(37, 92%, 65%);
+        $accent-500: hsl(37, 93%, 58%);
+        $accent-600: hsl(33, 76%, 51%);
         $accent-700: hsl(29, 80%, 44%);
         $accent-800: hsl(22, 82%, 39%);
         $accent-900: hsl(15, 86%, 30%);
