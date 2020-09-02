@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: '/palette-zds/',
+  publicPath: '/palette/',
 
   pluginOptions: {
     i18n: {
