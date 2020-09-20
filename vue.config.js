@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: '/palette/',
+  publicPath: '/normes-graphiques/',
 
   pluginOptions: {
     i18n: {
