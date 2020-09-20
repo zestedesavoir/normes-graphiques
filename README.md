@@ -1,23 +1,5 @@
-# Compagnon d'interface pour Zeste de Savoir
+# Normes graphiques de Zeste de Savoir
 
-Un site utilitaire pour simplifier le développement de l'interface de Zeste de Savoir.
-
-## Construction
-
-### Lancer en développement
-
-```
-make watch
-```
-
-### Vérifier et corriger les erreurs
-
-```
-make lint
-```
-
-### Construire pour GitHub Pages dans le dossier `docs`
-
-```
-make build
-```
+Ce dépôt contient des documents liés aux normes graphiques en vigueur sur Zeste de Savoir.
+Vous y trouverez [un paquet NPM pour réutiliser ces normes dans tous les projets où cela serait nécessaire](standards),
+ainsi qu'[un site web compagnon faisant office de documentation et d'outil pour utiliser ces normes](companion).

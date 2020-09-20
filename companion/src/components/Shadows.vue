@@ -27,47 +27,19 @@ import Copy from './Copy.vue'
 export default {
   data () {
     return {
-      shadows_raw: `
-        @mixin shadow-1 {
-            box-shadow: 0 1px 3px hsla(0, 0%, 0%, .12),
-                        0 1px 2px hsla(0, 0%, 0%, .24);
-        }
-
-        @mixin shadow-2 {
-            box-shadow: 0 3px 6px hsla(0, 0%, 0%, .15),
-                        0 2px 4px hsla(0, 0%, 0%, .12);
-        }
-
-        @mixin shadow-3 {
-            box-shadow: 0 10px 20px hsla(0, 0%, 0%, .15),
-                        0  3px  6px hsla(0, 0%, 0%, .10);
-        }
-
-        @mixin shadow-4 {
-            box-shadow: 0 15px 25px hsla(0, 0%, 0%, .15),
-                        0  5px 10px hsla(0, 0%, 0%, .5);
-        }
-
-        @mixin shadow-5 {
-            box-shadow: 0 20px 40px hsla(0, 0%, 0%, .3)
-        }
-
-        @mixin shadow-6 {
-            box-shadow: 0 20px 40px hsla(0, 0%, 0%, .5)
-        }
-      `
+      sass_shadows: require('./../../../standards/sass/shadows.sass').default
     }
   },
   computed: {
     shadows () {
-      return this.shadows_raw
-        .split('}')
+      return this.sass_shadows
+        .split('@mixin')
         .map(s => s.trim())
-        .map(s => s.split('{'))
-        .filter(s => s[0].trim() !== '')
+        .filter(s => !!s)
+        .map(s => s.split('\n'))
         .map(s => {
           return {
-            name: s[0].replace('@mixin', '').trim(),
+            name: s[0].trim(),
             css: s[1].trim().replace('box-shadow:', '').replace('\n', '').replace(/ +/g, ' ').replace(';', '').trim().replace('),', `),\n${Array('box-shadow: '.length).join(' ')}`)
           }
         })

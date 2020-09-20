@@ -16,7 +16,7 @@
           </div>
           <Copy
             :copy="rad.variable"
-            label="Copier le code SCSS"
+            label="Copier la variable"
           />
         </h2>
         <pre>border-radius: {{ rad.css }};</pre>
@@ -31,19 +31,12 @@ import Copy from './Copy.vue'
 export default {
   data () {
     return {
-      radius_raw: `
-      $radius-1: .4rem;
-      $radius-2: .6rem;
-      $radius-3: .8rem;
-      $radius-4: 1.2rem;
-      $radius-5: 1.6rem;
-      $radius-round: 19042014px;
-      `
+      sass_radius: require('./../../../standards/sass/radius.sass').default
     }
   },
   computed: {
     radius () {
-      return this.radius_raw
+      return this.sass_radius
         .split('\n')
         .map(r => r.trim())
         .filter(r => !!r)

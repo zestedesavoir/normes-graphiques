@@ -1,4 +1,4 @@
-''<template>
+<template>
   <div id="app">
     <div class="container">
       <b-tabs
@@ -106,9 +106,22 @@ export default {
 
 <style lang="scss">
 @import "~bulma/sass/utilities/_all";
+@import "zestedesavoir-standards";
 
-$primary: hsl(199, 85%, 21%);
+$primary: $primary-600;
 $primary-invert: findColorInvert($primary);
+
+$white-bis: $white;
+$white: $true-white;
+
+$grey-darker: $grey-800;
+$grey-dark: $grey-600;
+$grey: $grey-400;
+$grey-light: $grey-200;
+$grey-lighter: $grey-100;
+$grey-lightest: $grey-000;
+
+$pre-background: $grey-000;
 
 $colors: (
 "white": ($white, $black),
@@ -124,6 +137,7 @@ $colors: (
 
 // Links
 $link: $primary;
+$link-hover: $accent-800;
 $link-invert: $primary-invert;
 $link-focus-border: $primary;
 
@@ -137,7 +151,7 @@ body {
                'Segoe UI Emoji', 'Segoe UI Symbol';
 
   padding: 0;
-  padding-top: 1.5rem;
+  padding-top: $length-14;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -147,10 +161,10 @@ body {
   }
 
   .b-tabs .tab-content {
-    padding: 1.5rem 0 0 0;
+    padding: $length-14 0 0 0;
 
     @include mobile {
-      padding: 1.5rem .5rem .5rem;
+      padding: $length-14 $length-6 $length-6;
     }
   }
 
@@ -159,7 +173,7 @@ body {
     font-family: 'Fira Code', monospace;
     font-weight: bold;
 
-    color: #888;
+    color: $grey-600;
     background-color: transparent;
   }
 }

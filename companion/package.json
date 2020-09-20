@@ -12,7 +12,8 @@
     "buefy": "^0.8.20",
     "core-js": "^3.6.5",
     "register-service-worker": "^1.7.1",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "zestedesavoir-standards": "^1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",
@@ -29,6 +30,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "execa": "^4.0.3",
     "node-sass": "^4.12.0",
+    "raw-loader": "^4.0.1",
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-i18n": "^1.0.1",
     "vue-template-compiler": "^2.6.11"
@@ -46,7 +48,9 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "camelcase": 0
+      "camelcase": "off",
+      "import/no-webpack-loader-syntax": "off",
+      "vue/singleline-html-element-content-newline": "off"
     }
   },
   "browserslist": [

@@ -1,0 +1,23 @@
+{
+  "name": "zestedesavoir-standards",
+  "version": "1.0.2",
+  "description": "Zeste de Savoir graphical standards",
+  "main": "standards.sass",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zestedesavoir/normes-graphiques.git"
+  },
+  "keywords": [
+    "zeste de savoir",
+    "zds",
+    "standard",
+    "sass",
+    "ui"
+  ],
+  "author": "Amaury Carrade",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/zestedesavoir/normes-graphiques/issues"
+  },
+  "homepage": "https://zestedesavoir.github.io/normes-graphiques/"
+}

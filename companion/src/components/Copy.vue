@@ -21,6 +21,7 @@
       type="is-light"
       position="is-bottom"
       class="is-button-tooltip"
+      aria-hidden="true"
     >
       <svg
         viewBox="0 0 20 20"
@@ -94,6 +95,7 @@ export default {
 
 <style lang="sass">
 @import '~bulma/sass/utilities/_all'
+@import "zestedesavoir-standards"
 
 .copy-button-container
   display: inline-flex
@@ -107,8 +109,8 @@ export default {
       height: 1em
 
       path
-        fill: currentColor
+        fill: $grey-400
 
   &:hover svg.copy-button g path
-    fill: hsl(199, 85%, 21%) !important
+    fill: $grey-600 !important
 </style>

@@ -63,43 +63,26 @@ export default {
     return {
       pangramme: 'Voix ambiguë d\'un cœur qui, au zéphyr caressant le grauwacke, préfère une jatte de smoothies.',
       active_font: '',
-      fonts_raw: `
-      $font-sans-serif: "Source Sans Pro", "Segoe UI", "Trebuchet MS", Helvetica, "Helvetica Neue", Arial, sans-serif;
-      $font-serif: "Merriweather", "Liberation Serif", "Times New Roman", Times, Georgia, FreeSerif, serif;
-      $font-monospace: "Source Code Pro", monospace, serif;
-      `,
-      sizes_raw: `
-      $size-1: 7.2rem;
-      $size-2: 6rem;
-      $size-3: 4.8rem;
-      $size-4: 3.6rem;
-      $size-5: 3rem;
-      $size-6: 2.4rem;
-      $size-7: 2rem;
-      $size-8: 1.8rem;
-      $size-9: 1.6rem;
-      $size-10: 1.4rem;
-      $size-11: 1.2rem;
-      $size-12: 1rem;
-      $size-13: .8rem;
-      `
+      sass_typography: require('./../../../standards/sass/typography.sass').default
     }
   },
   computed: {
     fonts () {
-      return this.fonts_raw
+      return this.sass_typography
         .split('\n')
         .map(line => line.trim())
         .filter(line => !!line)
+        .filter(line => line.startsWith('$font-'))
         .map(line => line.split(':', 2))
         .map(l => { return { variable: l[0].trim(), fonts: l[1].trim().replace(';', ''), main_font: l[1].trim().split(',', 2)[0].replace(/^"|"$/g, '') } })
     },
 
     sizes () {
-      return this.sizes_raw
+      return this.sass_typography
         .split('\n')
         .map(line => line.trim())
         .filter(line => !!line)
+        .filter(line => line.startsWith('$size-'))
         .map(line => line.split(':', 2))
         .map(l => { return { variable: l[0].trim(), size: l[1].trim().replace(';', ''), number: parseFloat(l[1]) } })
         .sort((a, b) => parseInt((a.number - b.number) * 1000))
@@ -121,6 +104,7 @@ export default {
 
 <style lang="sass">
 @import "bulma/sass/utilities/mixins"
+@import "zestedesavoir-standards"
 
 // sorry
 @import url("https://fonts.googleapis.com/css2?family=Merriweather&family=Source+Code+Pro&family=Source+Sans+Pro&display=swap&text=Voix%20ambigu%C3%AB%20d%27un%20c%C5%93ur%20qui%2C%20au%20z%C3%A9phyr%20caressant%20le%20grauwacke%2C%20pr%C3%A9f%C3%A8re%20une%20jatte%20de%20smoothies.")
@@ -136,7 +120,7 @@ export default {
       flex: 1
 
   .font-sizes
-    margin: 2.5rem 1rem 1rem 1rem
+    margin: $length-24 $length-10 $length-10 $length-10
 
     ul
       li
@@ -149,16 +133,16 @@ export default {
         font-size: 10px
 
         &:not(:last-child)
-          padding-bottom: .4rem
-          border-bottom: 1px solid #eee
-          margin-bottom: .4rem
+          padding-bottom: $length-4
+          border-bottom: $length-1 solid $grey-100
+          margin-bottom: $length-4
 
         &:after
           content: ''
           position: absolute
           top: 0
           right: 0
-          width: 10rem
+          width: $length-96
           height: 200%
           background: linear-gradient(90deg, transparent 0%, transparent 50%, white 100%)
 
@@ -167,27 +151,26 @@ export default {
           position: relative
 
           &:not(.preview)
-            width: 8rem
+            width: $length-96
 
           &.size
             position: relative
             top: -2px
 
-            padding-right: 3rem
+            padding-right: $length-32
+
             font-family: 'Fira Code', monospace
             font-weight: bold
             font-size: 1.04rem
             text-align: right
-            color: #666
+
+            color: $grey-500
 
           code
-            padding: 0 0 0 .4rem
+            padding: 0 0 0 $length-4
 
           svg.copy-button
             height: .9em
-
-            path
-              color: #999
 
         p.preview
           overflow: hidden
@@ -196,4 +179,6 @@ export default {
           position: relative
 
           width: calc(100% - 16rem)
+
+          color: $grey-800
 </style>

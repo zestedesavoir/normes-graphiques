@@ -154,98 +154,8 @@ export default {
       copy_format: 'hsl',
       hovered: '',
       copied: '',
-      raw_palette: {
-        'Teintes primaires': `
-        $primary-000: hsl(198, 40%, 87%);
-        $primary-100: hsl(198, 49%, 69%);
-        $primary-200: hsl(197, 50%, 52%);
-        $primary-300: hsl(198, 100%, 34%);
-        $primary-400: hsl(199, 84%, 32%);
-        $primary-500: hsl(199, 84%, 27%);
-        $primary-600: hsl(199, 85%, 21%);
-        $primary-700: hsl(199, 87%, 18%);
-        $primary-800: hsl(199, 92%, 15%);
-        $primary-900: hsl(199, 97%, 13%);
-        `,
-        "Teintes d'accentuation": `
-        $accent-000: hsl(51, 50%, 95%);
-        $accent-100: hsl(40, 78%, 87%);
-        $accent-200: hsl(38, 86%, 80%);
-        $accent-300: hsl(38, 90%, 73%);
-        $accent-400: hsl(37, 92%, 65%);
-        $accent-500: hsl(37, 93%, 58%);
-        $accent-600: hsl(33, 76%, 51%);
-        $accent-700: hsl(29, 80%, 44%);
-        $accent-800: hsl(22, 82%, 39%);
-        $accent-900: hsl(15, 86%, 30%);
-        `,
-        'Teintes de violet': `
-        $purple-000: hsl(262, 92%, 97%);
-        $purple-100: hsl(264, 36%, 89%);
-        $purple-200: hsl(264, 35%, 82%);
-        $purple-300: hsl(265, 35%, 74%);
-        $purple-400: hsl(265, 34%, 67%);
-        $purple-500: hsl(265, 34%, 59%);
-        $purple-600: hsl(264, 34%, 52%);
-        $purple-700: hsl(264, 43%, 44%);
-        $purple-800: hsl(264, 58%, 37%);
-        $purple-900: hsl(264, 82%, 29%);
-        `,
-        'Teintes de rouge': `
-        $red-000: hsl(360, 100%, 97%);
-        $red-100: hsl(360, 82%, 89%);
-        $red-200: hsl(360, 77%, 78%);
-        $red-300: hsl(360, 71%, 66%);
-        $red-400: hsl(360, 64%, 55%);
-        $red-500: hsl(360, 67%, 44%);
-        $red-600: hsl(360, 72%, 38%);
-        $red-700: hsl(360, 79%, 32%);
-        $red-800: hsl(360, 85%, 25%);
-        $red-900: hsl(360, 92%, 20%);
-        `,
-        'Teintes de vert': `
-        $green-000: hsl(83, 88%, 94%);
-        $green-100: hsl(84, 77%, 86%);
-        $green-200: hsl(83, 68%, 74%);
-        $green-300: hsl(83, 63%, 61%);
-        $green-400: hsl(83, 55%, 52%);
-        $green-500: hsl(83, 64%, 42%);
-        $green-600: hsl(83, 70%, 34%);
-        $green-700: hsl(83, 74%, 27%);
-        $green-800: hsl(81, 78%, 21%);
-        $green-900: hsl(81, 86%, 14%);
-        `,
-        'Teintes de bleu': `
-        $blue-000: hsl(216, 100%, 93%);
-        $blue-100: hsl(216, 100%, 85%);
-        $blue-200: hsl(219, 95%, 76%);
-        $blue-300: hsl(222, 81%, 65%);
-        $blue-400: hsl(224, 69%, 54%);
-        $blue-500: hsl(223, 71%, 47%);
-        $blue-600: hsl(228, 74%, 43%);
-        $blue-700: hsl(230, 80%, 38%);
-        $blue-800: hsl(232, 86%, 32%);
-        $blue-900: hsl(234, 90%, 25%);
-        `,
-        'Teintes de gris': `
-        $grey-000: hsl(216, 33%, 97%);
-        $grey-100: hsl(214, 15%, 91%);
-        $grey-200: hsl(210, 16%, 82%);
-        $grey-300: hsl(211, 13%, 65%);
-        $grey-400: hsl(211, 10%, 53%);
-        $grey-500: hsl(211, 12%, 43%);
-        $grey-600: hsl(209, 14%, 37%);
-        $grey-700: hsl(209, 18%, 30%);
-        $grey-800: hsl(209, 20%, 25%);
-        $grey-900: hsl(210, 24%, 16%);
-        `,
-        'Noirs et blancs': `
-        $true-white: hsl(0, 0%, 100%);
-        $white: hsl(0, 0%, 98%);
-        $black: hsl(0, 0%, 6%);
-        $true-black: hsl(0, 0%, 0%);
-        `
-      },
+
+      sass_colors: require('./../../../standards/sass/colors.sass').default,
 
       input_color_to_convert: '',
       convert_original_hovered: false,
@@ -255,13 +165,47 @@ export default {
   },
 
   computed: {
+    raw_palettes () {
+      const palettes = []
+
+      let current_palette = null
+      let current_palette_name = null
+
+      for (let sass_line of this.sass_colors.split('\n')) {
+        sass_line = sass_line.trim()
+
+        // Potential end of a group, and beginning of the next one
+        if (sass_line.startsWith('//')) {
+          if (current_palette !== null) {
+            palettes.push({
+              name: current_palette_name.trim(),
+              sass: current_palette.trim()
+            })
+          }
+
+          current_palette_name = sass_line.replace('//', '').trim()
+          current_palette = ''
+        } else if (sass_line.startsWith('$')) {
+          // Variable in the group
+          current_palette += sass_line + '\n'
+        }
+      }
+
+      // We push the last one
+      palettes.push({
+        name: current_palette_name.trim(),
+        sass: current_palette.trim()
+      })
+
+      return palettes
+    },
+
     palettes () {
-      return Object.keys(this.raw_palette).map(name => {
-        const scss = this.raw_palette[name]
+      return this.raw_palettes.map(({ name, sass }) => {
         let variable = null
 
         const palette = Object.fromEntries(
-          scss
+          sass
             .split('\n')
             .map(line => {
               line = line.trim()
@@ -349,82 +293,93 @@ export default {
 
 <style lang="sass">
 @import "bulma/sass/utilities/mixins"
+@import "zestedesavoir-standards"
 
 .color-preview
   display: inline-flex
   flex-direction: column
   align-items: center
 
-  margin: 0 .4rem 1rem
+  margin: 0 $length-4 $length-10
 
   text-align: center
 
   span
     &.color
       display: block
-      width: 3.2rem
-      height: 3.2rem
-      border-radius: 4px
+      width: $length-32
+      height: $length-32
+      border-radius: $radius-1
       box-shadow: 0 -2px 0 hsla(0, 0%, 100%, 0.15), inset 0 2px 2px hsla(0, 0%, 0%, 0.1)
       cursor: pointer
 
     &.name
       display: inline-block
-      margin-top: .6rem
-      color: #777
+      margin-top: $length-6
+      color: $grey-500
 
       code
         margin: 0
         font-size: 1em
 
 article.palette
-  margin: 1rem 0
-  padding: 0
   display: flex
   align-items: flex-start
 
-  &:not(:last-of-type)
-    margin-top: 0
-    margin-bottom: 1rem
-    padding-bottom: .5rem
-    border-bottom: solid 1px #eee
+  margin: 0 0 $length-12 0
+  padding: 0
+  padding-bottom: $length-6
+
+  border-bottom: solid 1px $grey-100
 
   h1
-    flex: 1
-    margin: .6rem .2rem
-    padding-top: .4rem
-    min-width: 10rem
-    font-size: 1.2rem
+    margin: $length-6 $length-2
+    padding-top: $length-4
+    min-width: $length-192
+    font-size: $size-11
     font-weight: bold
-    color: #444
+    color: $grey-700
 
   code
     display: block
 
-    margin-top: .4rem
+    margin-top: $length-4
     padding: 0
 
   ul
     list-style-type: none
-    margin: 1rem 0 0 0
+    margin: $length-10 0 0 0
 
     &.has-variables
+      display: flex
+      flex-direction: row
+      flex-wrap: wrap
+      align-items: flex-start
+
+      +mobile
+        flex-direction: column
+        flex-wrap: nowrap
+
+      flex: 2
+
       li
-        width: 8rem
+        width: $length-96
+
+        display: flex
+        flex-direction: row
+        align-items: center
+
+        width: calc(50% - #{$length-4} * 2)
 
         +mobile
-          display: flex
-          flex-direction: row
-          align-items: center
-
           width: 100%
 
-          .name
-            margin-left: 1.5rem
+        .name
+          margin-left: $length-16
 
 footer.copy-switch
   display: flex
-  margin: 2.5rem 1rem
+  margin: $length-32 $length-10
 
   p
     flex: 1
@@ -434,7 +389,7 @@ footer.copy-switch
       text-align: right
 
   .switch
-    margin: 0 1rem
+    margin: 0 $length-10
 
     .check
       background-color: hsl(199, 85%, 21%) !important
@@ -446,7 +401,7 @@ footer.copy-switch
       left: -2px
 
       padding: 0
-      padding-right: .4rem
+      padding-right: $length-4
 
       height: 1em
 
@@ -460,7 +415,7 @@ footer.copy-switch
         display: block
 
         position: relative
-        left: .4rem
+        left: $length-4
 
         width: 0
         height: 0
@@ -484,12 +439,13 @@ footer.copy-switch
       color: hsl(198, 29%, 56%)
 
 aside.closest-color-tool
-  margin: 1.5rem
+  margin: $length-16
+  padding-top: $length-8
 
   h1
-    margin-bottom: 1.5rem
-    font-size: .9rem
-    color: hsl(199, 85%, 21%)
+    margin-bottom: $length-16
+    font-weight: bold
+    color: $primary-600
 
     +mobile
       text-align: center
@@ -511,10 +467,10 @@ aside.closest-color-tool
       flex-direction: column
       align-items: center
 
-    margin-top: 2rem
+    margin-top: $length-20
 
     .arrow, .arrow-mobile
-      font-size: 2rem
+      font-size: $size-7
       text-align: center
 
       color: hsl(199, 87%, 18%)
@@ -523,7 +479,7 @@ aside.closest-color-tool
 
     .arrow-mobile
       display: none
-      margin: .5rem 0 1.5rem
+      margin: $length-6 0 $length-16
 
     +mobile
       .arrow
