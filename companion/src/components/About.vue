@@ -40,8 +40,10 @@
       <h3>Importer ces normes dans votre projet</h3>
 
       <p>
-        Un paquet NPM <copy copy="zestedesavoir-standards"><code>zestedesavoir-standards</code></copy> est mis à disposition afin d'importer ces normes dans vos projets. Il expose les fichiers
-        SASS contenant toutes les variables et <em>mixins</em> exposées sur ce site. Installez-le ainsi.
+        Un <a href="https://www.npmjs.com/package/zestedesavoir-standards">paquet npm</a>
+        <copy copy="zestedesavoir-standards"><code>zestedesavoir-standards</code></copy>
+        est mis à disposition afin d'importer ces normes dans vos projets. Il expose les fichiers  SASS contenant toutes
+        les variables et <em>mixins</em> exposées sur ce site. Installez-le ainsi.
       </p>
 
       <pre>npm i zestedesavoir-standards</pre>
