@@ -67,6 +67,7 @@ export default {
 
   .shadow
     width: calc(50% - 2rem)
+    border-color: transparent
 
     @include mobile
       width: calc(100% - 2rem)

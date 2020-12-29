@@ -72,7 +72,7 @@ export default {
         .split('\n')
         .map(line => line.trim())
         .filter(line => !!line)
-        .filter(line => line.startsWith('$font-'))
+        .filter(line => line.startsWith('$font-') && !line.startsWith('$font-size-'))
         .map(line => line.split(':', 2))
         .map(l => { return { variable: l[0].trim(), fonts: l[1].trim().replace(';', ''), main_font: l[1].trim().split(',', 2)[0].replace(/^"|"$/g, '') } })
     },
@@ -82,7 +82,7 @@ export default {
         .split('\n')
         .map(line => line.trim())
         .filter(line => !!line)
-        .filter(line => line.startsWith('$size-'))
+        .filter(line => line.startsWith('$font-size-'))
         .map(line => line.split(':', 2))
         .map(l => { return { variable: l[0].trim(), size: l[1].trim().replace(';', ''), number: parseFloat(l[1]) } })
         .sort((a, b) => parseInt((a.number - b.number) * 1000))
