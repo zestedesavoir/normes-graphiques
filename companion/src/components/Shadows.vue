@@ -47,7 +47,7 @@ export default {
           return {
             ...s,
             id: s.name.replace('shadow-', ''),
-            include: `@incude ${s.name};`
+            include: `@include ${s.name};`
           }
         })
     }
